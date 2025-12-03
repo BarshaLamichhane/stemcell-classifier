@@ -1,0 +1,46 @@
+
+venv/*
+data/*
+src/__pycache__
+.DS_Store
+
+# Angular build output
+src/frontend/organoid-ui/dist/
+src/frontend/organoid-ui/dist-ssr/
+src/frontend/organoid-ui/out-tsc/
+
+# Compiled files
+src/frontend/organoid-ui/*.js
+src/frontend/organoid-ui/*.js.map
+
+# Node
+src/frontend/organoid-ui/node_modules/
+src/frontend/organoid-ui/npm-debug.log
+src/frontend/organoid-ui/yarn-debug.log
+src/frontend/organoid-ui/yarn-error.log
+
+# IDEs and editors
+src/frontend/organoid-ui/.vscode/
+src/frontend/organoid-ui/.idea/
+src/frontend/organoid-ui/*.suo
+src/frontend/organoid-ui/*.ntvs*
+src/frontend/organoid-ui/*.njsproj
+src/frontend/organoid-ui/*.sln
+
+# Environment files (optional)
+# You may want to include environment.ts but exclude secrets
+src/environments/environment.prod.ts
+src/environments/environment*.local.ts
+
+# Angular cache
+src/frontend/organoid-ui/.angular/cache/
+
+# Logs
+src/frontend/organoid-ui/*.log
+
+# System files
+src/frontend/organoid-ui/.DS_Store
+src/frontend/organoid-ui/Thumbs.db
+
+# Optional
+src/frontend/organoid-ui/package-lock.json

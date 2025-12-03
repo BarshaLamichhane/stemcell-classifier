@@ -1,0 +1,12 @@
+.upload-card {
+  max-width: 520px;
+  margin: 24px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  text-align: center;
+
+  input { margin: 10px 0; }
+  .preview img { max-width: 100%; border-radius: 6px; margin-bottom: 10px; }
+  button { padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+}
