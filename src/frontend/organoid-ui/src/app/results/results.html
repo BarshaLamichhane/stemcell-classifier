@@ -1,0 +1,28 @@
+<div class="result-card" *ngIf="data">
+  <h3>Prediction</h3>
+
+  <div class="image-row">
+    <div class="original">
+      <p>Original</p>
+      <img [src]="data.original_base64" alt="orig" />
+    </div>
+
+    <div class="mask">
+      <p>Mask / Overlay</p>
+      <div class="overlay-wrap">
+        <img [src]="data.original_base64" alt="orig" class="bg"/>
+        <img *ngIf="data.mask_base64" [src]="data.mask_base64" class="mask-img" />
+      </div>
+    </div>
+  </div>
+
+  <div class="meta">
+    <p><strong>Label:</strong> {{ data.class_label }} ({{ (data.confidence*100) | number:'1.0-0' }}%)</p>
+  </div>
+
+  <h4>Similar images</h4>
+  <div class="similar">
+    <img *ngFor="let s of data.similar_images" [src]="s" />
+  </div>
+</div>
+
