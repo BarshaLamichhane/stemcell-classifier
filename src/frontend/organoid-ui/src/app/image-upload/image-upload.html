@@ -1,0 +1,9 @@
+<div class="upload-card">
+  <h2>Upload Organoid Image</h2>
+  <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+  <div *ngIf="previewUrl" class="preview">
+    <img [src]="previewUrl" alt="preview" />
+  </div>
+  <button (click)="analyze()" [disabled]="!selectedFile">Analyze</button>
+</div>
+

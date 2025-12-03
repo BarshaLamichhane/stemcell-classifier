@@ -1,0 +1,13 @@
+torch
+torchvision
+torchaudio
+kaggle
+numpy
+pillow
+matplotlib
+kaggle
+fastapi
+uvicorn
+opencv-python
+faiss-cpu
+python-multipart
