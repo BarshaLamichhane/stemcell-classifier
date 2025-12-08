@@ -1,12 +1,27 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  templateUrl: './app.component.html'
 })
-export class App {
-  protected readonly title = signal('organoid-ui');
+export class AppComponent {
+  file: File | null = null;
+  result: any;
+
+  constructor(private http: HttpClient) {}
+
+  onFileSelected(event: any) {
+    this.file = event.target.files[0];
+  }
+
+  upload() {
+    const formData = new FormData();
+    formData.append("file", this.file!);
+
+    this.http.post("http://localhost:8000/predict", formData)
+      .subscribe(res => {
+        this.result = res;
+      });
+  }
 }

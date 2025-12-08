@@ -1,6 +1,8 @@
-from src import train, predict
+from src.backend import dataset_downloader
 
-def main():
+
+
+""""def main():
     print("1. Train model")
     print("2. Predict image")
     choice = input("Enter choice: ")
@@ -11,7 +13,9 @@ def main():
         img = input("Enter image path: ")
         predict.predict(img)
     else:
-        print("Invalid choice!")
+        print("Invalid choice!")"""
 
+def main():
+    dataset_downloader.download()
 if __name__ == "__main__":
     main()

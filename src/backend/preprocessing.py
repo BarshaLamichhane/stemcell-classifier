@@ -1,9 +1,19 @@
+
+# backend/preprocessing.py
 import cv2
 import numpy as np
-from PIL import Image
+from torchvision import transforms
 
-def enhance_image(img: Image.Image):
-    img_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-    img_cv = cv2.GaussianBlur(img_cv, (3, 3), 0)
-    img_cv = cv2.convertScaleAbs(img_cv, alpha=1.2, beta=10)
-    return Image.fromarray(cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB))
+preprocess_transform = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize((128, 128)),
+    transforms.Grayscale(num_output_channels=1),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.5], std=[0.5]),
+])
+
+def preprocess_image(path):
+    img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    img = cv2.equalizeHist(img)
+    img = np.stack([img], axis=-1)  
+    return preprocess_transform(img).unsqueeze(0)
