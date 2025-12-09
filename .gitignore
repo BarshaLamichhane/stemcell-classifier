@@ -2,6 +2,7 @@
 venv/*
 data/*
 src/__pycache__
+src/backend/__pycache__
 .DS_Store
 
 # Angular build output
