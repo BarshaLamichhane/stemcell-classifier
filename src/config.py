@@ -15,5 +15,6 @@ ORGANOID_MINI = {
     "EPOCHS": 10,
     "MODEL_PATH": "stemcell_cnn.pth",
     "DATASET_NAME": "daelamyyusuf/cancer-stem-cell-image-clasification-datasets",
-    "DATA_TARGET_DIR": "data/"
+    "DATA_TARGET_DIR": "data/",
+    "TRAIN_DIR": "data/Training/After/3358-input.jpg"
 }
