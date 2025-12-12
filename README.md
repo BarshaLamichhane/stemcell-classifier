@@ -55,3 +55,42 @@ python dataset_downloader.py
 ```
 Which is inside `src/dataset_downloader.py`
 
+
+
+### Train the model
+```bash
+python backend.py train
+```
+
+Which  creates:
+
+model.pth
+
+### Build FAISS index
+```bash
+python backend.py build-index
+```
+
+This creates:
+
+faiss.index
+
+embeddings.npy
+
+labels.npy
+
+### Run the FastAPI backend
+```bash
+python backend.py serve
+```
+
+Open:
+
+http://localhost:8000/docs
+
+
+You will see:
+
+/predict
+
+/search

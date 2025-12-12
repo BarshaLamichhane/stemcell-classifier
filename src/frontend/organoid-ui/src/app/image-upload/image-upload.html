@@ -1,9 +1,19 @@
-<div class="upload-card">
-  <h2>Upload Organoid Image</h2>
-  <input type="file" (change)="onFileSelected($event)" accept="image/*" />
-  <div *ngIf="previewUrl" class="preview">
-    <img [src]="previewUrl" alt="preview" />
-  </div>
-  <button (click)="analyze()" [disabled]="!selectedFile">Analyze</button>
-</div>
+<div class="card">
+  <h2>OrganoidVision — Analyze Image</h2>
 
+  <div class="drop">
+    <input type="file" (change)="onFile($event)" accept="image/*" />
+  </div>
+
+  <div *ngIf="preview" class="preview">
+    <img [src]="preview" alt="preview" />
+  </div>
+
+  <div class="actions">
+    <button (click)="analyze()" [disabled]="!file || loading">
+      {{ loading ? 'Analyzing…' : 'Analyze' }}
+    </button>
+  </div>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+</div>
