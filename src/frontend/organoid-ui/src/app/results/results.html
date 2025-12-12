@@ -1,28 +1,29 @@
-<div class="result-card" *ngIf="data">
-  <h3>Prediction</h3>
+<div class="card" *ngIf="data">
+  <h2>Result</h2>
 
-  <div class="image-row">
-    <div class="original">
-      <p>Original</p>
-      <img [src]="data.original_base64" alt="orig" />
+  <div class="row">
+    <div class="col">
+      <h3>Original</h3>
+      <img [src]="data.original_base64" *ngIf="data.original_base64" />
     </div>
 
-    <div class="mask">
-      <p>Mask / Overlay</p>
-      <div class="overlay-wrap">
-        <img [src]="data.original_base64" alt="orig" class="bg"/>
-        <img *ngIf="data.mask_base64" [src]="data.mask_base64" class="mask-img" />
+    <div class="col">
+      <h3>Prediction</h3>
+      <p *ngIf="data.class_label"><strong>{{ data.class_label }}</strong></p>
+      <p *ngIf="data.confidence !== undefined">Confidence: {{ (data.confidence*100) | number:'1.0-0' }}%</p>
+      <div *ngIf="data.probabilities">
+        Probabilities: <pre>{{ data.probabilities | json }}</pre>
       </div>
     </div>
   </div>
 
-  <div class="meta">
-    <p><strong>Label:</strong> {{ data.class_label }} ({{ (data.confidence*100) | number:'1.0-0' }}%)</p>
-  </div>
+  <h4>Mask / Overlay</h4>
+  <img *ngIf="data.mask_base64" [src]="data.mask_base64" />
 
   <h4>Similar images</h4>
   <div class="similar">
-    <img *ngFor="let s of data.similar_images" [src]="s" />
+    <img *ngFor="let s of similarImages" [src]="s" />
   </div>
-</div>
 
+  <div *ngIf="loadingSimilar">Loading similar images…</div>
+</div>
