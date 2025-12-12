@@ -1,17 +1,3 @@
-<div class="container">
-  <h1>OrganoidVision</h1>
-
-  <input type="file" (change)="onFileSelected($event)" />
-
-  <button (click)="upload()" [disabled]="!file">Analyze</button>
-
-  <div *ngIf="result">
-    <h3>Prediction: {{ result.class }}</h3>
-    <p>Probabilities: {{ result.probabilities | json }}</p>
-
-    <h4>Similar Images</h4>
-    <div class="similar">
-      <img *ngFor="let img of result.similar_images" [src]="img" />
-    </div>
-  </div>
+<div class="app-container">
+  <router-outlet></router-outlet>
 </div>
