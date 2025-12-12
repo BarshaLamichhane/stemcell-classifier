@@ -22,6 +22,7 @@ def main():
     """dataset_downloader.download()"""
     
     """preprocessing.read_image_pil(config.ORGANOID_MINI["TRAIN_DIR"])"""
+    ###dataset_downloader.download()
     preprocessing.read_image_pil("data/Training/After/3402-input.png")
     ##print(os.listdir("data/Training/After/"))
     preprocessing.simple_enhance(preprocessing.read_image_pil("data/Training/After/3402-input.png"))
