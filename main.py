@@ -1,4 +1,7 @@
 from src.backend import dataset_downloader
+from src.backend import preprocessing
+from src import config
+import os
 
 
 
@@ -16,6 +19,12 @@ from src.backend import dataset_downloader
         print("Invalid choice!")"""
 
 def main():
-    dataset_downloader.download()
+    """dataset_downloader.download()"""
+    
+    """preprocessing.read_image_pil(config.ORGANOID_MINI["TRAIN_DIR"])"""
+    preprocessing.read_image_pil("data/Training/After/3402-input.png")
+    ##print(os.listdir("data/Training/After/"))
+    preprocessing.simple_enhance(preprocessing.read_image_pil("data/Training/After/3402-input.png"))
+
 if __name__ == "__main__":
     main()

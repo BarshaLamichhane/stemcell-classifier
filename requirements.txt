@@ -11,3 +11,4 @@ uvicorn
 opencv-python
 faiss-cpu
 python-multipart
+opencv-python
