@@ -3,8 +3,8 @@ import { ApiService } from '../api/api.service';
 
 @Component({
   selector: 'app-result',
-  templateUrl: './result.component.html',
-  styleUrls: ['./result.component.scss']
+  templateUrl: './results.html',
+  styleUrls: ['./results.scss']
 })
 export class ResultComponent implements OnInit {
   data: any = null;
