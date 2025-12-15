@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload',
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.scss']
+  templateUrl: './image-upload.html',
+  styleUrls: ['./image-upload.scss']
 })
 export class ImageUploadComponent {
   file?: File;
@@ -47,7 +47,7 @@ export class ImageUploadComponent {
         }
 
         // Otherwise fallback to /search -> returns indices/distances
-        this.api.searchSimilar(this.file).subscribe({
+        this.api.searchSimilar(this.file!).subscribe({
           next: (searchRes: any) => {
             // store search result and navigate; result component will fetch images individually
             const payload = {
