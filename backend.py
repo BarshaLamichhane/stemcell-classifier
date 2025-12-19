@@ -118,7 +118,7 @@ def build_index():
     print("📌 Building FAISS index...")
 
     if not os.path.exists(MODEL_PATH):
-        print("❌ ERROR: model.pth not found. Run: python backend.py train")
+        print("❌ ERROR: model.pth not found. Run: python backend.py train ")
         return
 
     train_data, _ = load_dataset()
