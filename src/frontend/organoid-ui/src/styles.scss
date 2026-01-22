@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+//@import "styles/variables";
+//@import "styles/mixins";
+
+/* Bootstrap */
+@import "bootstrap/scss/bootstrap";
+
+/* Custom global styles */
+//@import "styles/base";
+//@import "styles/layout";
+//@import "styles/utilities";
+
+/*body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f9fa;
+}*/

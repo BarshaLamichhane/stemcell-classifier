@@ -9,6 +9,11 @@ faiss.index
 image_paths.npy
 labels.npy
 model.pth
+model/*
+metrics/*
+__pycache__
+src/backend_backup/__pycache__
+
 
 # Angular build output
 src/frontend/organoid-ui/dist/

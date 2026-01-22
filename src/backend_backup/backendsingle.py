@@ -10,7 +10,11 @@ from PIL import Image
 import numpy as np
 import uvicorn
 import faiss
-
+"""
+1. https://www.kaggle.com/code/tirendazacademy/cats-dogs-classification-with-pytorch/notebook
+2. https://www.nature.com/articles/s41698-025-01082-6#:~:text=A%20major%20challenge%20in%20effective,approach%20to%20predict%20clinical%20outcome.
+3. https://www.nature.com/articles/s41698-025-01082-6#:~:text=A%20major%20challenge%20in%20effective,approach%20to%20predict%20clinical%20outcome.
+"""
 
 # ============================================================
 # GLOBAL SETTINGS
@@ -118,7 +122,7 @@ def build_index():
     print("📌 Building FAISS index...")
 
     if not os.path.exists(MODEL_PATH):
-        print("❌ ERROR: model.pth not found. Run: python backend.py train")
+        print("❌ ERROR: model.pth not found. Run: python backend.py train ")
         return
 
     train_data, _ = load_dataset()

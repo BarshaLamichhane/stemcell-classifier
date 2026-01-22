@@ -1,77 +1,74 @@
-import { Component } from '@angular/core';
-import { ApiService } from '../api/api.service';
-import { Router } from '@angular/router';
+import { AfterViewInit, Component, NgZone } from '@angular/core';
+import { ApiService, PredictionResponse } from '../api/api.service';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+
 
 @Component({
-  selector: 'app-upload',
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.scss']
+  selector: 'image-upload',
+  templateUrl: './image-upload.html',
+  styleUrls: ['./image-upload.scss'],
+  imports: [RouterModule, RouterOutlet, CommonModule],
 })
-export class ImageUploadComponent {
-  file?: File;
-  preview?: string;
-  loading = false;
-  error?: string;
+export class ImageUploadComponent{
+  selectedFile!: File;
+  result!: PredictionResponse;
+  loading$ = new BehaviorSubject<boolean>(false);
+  //loading = false;
+  imagePreview!: string;
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(private api: ApiService, private ngZone: NgZone, private router: Router) {}
 
-  onFile(evt: any) {
-    this.error = undefined;
-    const f = evt.target.files?.[0];
-    if (!f) return;
-    this.file = f;
-
+  onFileSelected(evt: any) {
+    this.selectedFile = evt.target.files[0];
     const reader = new FileReader();
-    reader.onload = e => this.preview = e.target?.result as string;
-    reader.readAsDataURL(f);
+    reader.onload = () => {
+    this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(this.selectedFile);
   }
+  clearImage() {
+    this.selectedFile = null as any;
+    this.imagePreview = '';
+    this.result = null as any;
+  }
+  predict() {
+    if (!this.selectedFile) return;
 
-  analyze() {
-    if (!this.file) return;
-    this.loading = true;
-    this.api.predict(this.file).subscribe({
-      next: (res: any) => {
-        this.loading = false;
-        // If backend already returns similar_images (base64), we use it
-        if (res.similar_images && res.similar_images.length > 0) {
-          const payload = {
-            original_base64: res.original_base64 || this.preview,
-            mask_base64: res.mask_base64 || null,
-            class_label: res.class_label || res.prediction || null,
-            confidence: res.confidence || (res.probabilities ? res.probabilities[res.prediction] : null),
-            similar_images: res.similar_images
-          };
-          localStorage.setItem('analysis', JSON.stringify(payload));
-          this.router.navigate(['/result']);
-          return;
-        }
+    this.loading$.next(true);  // set loading to true
+              // reset previous result
 
-        // Otherwise fallback to /search -> returns indices/distances
-        this.api.searchSimilar(this.file).subscribe({
-          next: (searchRes: any) => {
-            // store search result and navigate; result component will fetch images individually
-            const payload = {
-              original_base64: this.preview,
-              class_label: res.class || res.prediction || null,
-              confidence: res.probabilities ? Math.max(...res.probabilities) : null,
-              search_indices: searchRes.indices || [],
-              search_distances: searchRes.distances || []
-            };
-            localStorage.setItem('analysis', JSON.stringify(payload));
-            this.router.navigate(['/result']);
-          },
-          error: (err) => {
-            this.loading = false;
-            this.error = 'Prediction succeeded but similarity search failed.';
-            console.error(err);
-          }
-        });
+    this.api.predictBloodCellType(this.selectedFile).subscribe({
+      next: (response) => {
+        this.result = response;
+        this.loading$.next(false); // set loading to false
       },
       error: (err) => {
         console.error(err);
-        this.loading = false;
-        this.error = 'Failed to call /predict. Is the backend running?';
+        this.loading$.next(false); // ensure spinner disappears even on error
       }
     });
-  }
+
+      /*if (!this.selectedFile) return;
+
+      this.loading = true;
+
+      this.api.predictBloodCellType(this.selectedFile).subscribe({
+        next: (response) => {
+          this.ngZone.run(() => {
+            this.result = response;
+            this.loading = false;
+          });
+        },
+        error: (err) => {
+          this.ngZone.run(() => {
+            console.error(err);
+            this.loading = false;
+          });
+        }
+      });*/
+ }
+
+
 }
