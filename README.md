@@ -20,18 +20,22 @@ The goal of the project is to demonstrate how a machine learning model can be in
 ```bash 
 git clone https://github.com/BarshaLamichhane/stemcell-classifier.git
 ```
-### Go to the cloned repository**
+### Go to the cloned repository
 ```bash 
 cd path/to/stemcell-classifier
 ```
-**Create virtual environment**
-`python3 -m venv venv`
-**Activate virtual environment**
-`For mac/linux`
+### Create virtual environment
+
+```bash 
+python3 -m venv venv
+```
+### Activate virtual environment
+***For mac/linux run***
 ```bash
 source venv/bin/activate 
-````
-For windows
+```
+***For windows run***
+
 ```bash
 venv\bin\activate 
 ```
@@ -39,16 +43,16 @@ venv\bin\activate
 ```bash
 pip install -r requirements.txt
 ```
-## Download kaggle Dataset (from cli)
+### Download kaggle Dataset (from cli)
 open seperate terminal, Terminal 2 out of virtual environment and 
-### install kaggle
+**install kaggle**
 `pip install kaggle`
 
-### set up kaggle API
+**set up kaggle API**
 - go to Kaggle => Account Settings => API => create Legacy API credentials
 It will download `kaggle.json` file automatically in download folder
 
-###  save `kaggle.json` API token inside:**
+**save `kaggle.json` API token inside:**
 Windows: C:\Users\<you>\.kaggle\kaggle.json
 Mac/Linux: ~/.kaggle/kaggle.json
 
