@@ -1,0 +1,57 @@
+
+<!-- https://getbootstrap.com/docs/4.0/components/navbar/-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Blood Cell Classifier</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+       <a class="nav-link" href="#">Home</a>
+        
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Pricing</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown link
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+<nav *ngIf="!imagePreview" class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">Upload Image</span>
+            <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
+        
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Cell Type
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Class 1</a>
+          <a class="dropdown-item" href="#">Class 2</a>
+          <a class="dropdown-item" href="#">Class 3</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+

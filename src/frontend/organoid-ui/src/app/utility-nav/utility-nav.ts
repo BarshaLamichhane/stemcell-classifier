@@ -1,18 +1,18 @@
-import { AfterViewInit, Component, NgZone } from '@angular/core';
-import { ApiService, PredictionResponse } from '../api/api.service';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Component, NgZone } from '@angular/core';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { ApiService, PredictionResponse } from '../api/api.service';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { UtilityNav } from '../utility-nav/utility-nav';
-
 
 @Component({
-  selector: 'image-upload',
-  templateUrl: './image-upload.html',
-  styleUrls: ['./image-upload.scss'],
-  imports: [RouterModule, RouterOutlet, CommonModule, UtilityNav],
+  selector: 'app-utility-nav',
+  imports: [RouterModule, RouterOutlet, CommonModule],
+  templateUrl: './utility-nav.html',
+  styleUrl: './utility-nav.scss'
 })
-export class ImageUploadComponent{
+export class UtilityNav {
+
+
   selectedFile!: File;
   result!: PredictionResponse;
   loading$ = new BehaviorSubject<boolean>(false);
@@ -69,7 +69,7 @@ export class ImageUploadComponent{
           });
         }
       });*/
- }
+  }
 
 
 }
