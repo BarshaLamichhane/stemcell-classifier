@@ -1,19 +1,7 @@
+<!--https://getbootstrap.com/docs/5.0/components/button-group/ -->
+
 <div class="container py-5">
   <app-utility-nav></app-utility-nav>
-  <div *ngIf="!imagePreview" class="card shadow-sm">
-    <div class="btn-group" role="group" aria-label="Basic example">
-      <button type="button" class="btn btn-primary">Left</button>
-      <button type="button" class="btn btn-primary" (click)="predict()" [disabled]="!selectedFile">Classify</button>
-      <button type="button" class="btn btn-primary">Right</button>
-    </div>
-    <button
-    class="btn btn-primary w-100"
-    (click)="predict()"
-    [disabled]="!selectedFile"
-    >
-    Classify Blood Cell Image
-    </button>
-  </div> 
 </div>
 <div class=" card shadow">----------------------------Below This is previous UI sent for Doppler SA</div>
 <div class="container py-5">

@@ -55,3 +55,12 @@
   </div>
 </nav>
 
+  
+<div *ngIf="!imagePreview" class="card shadow-sm">
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary">Run Training</button>
+        <button type="button" class="btn btn-primary" (click)="predict()" [disabled]="!selectedFile">Classify</button>
+    </div>
+</div> 
+
+
