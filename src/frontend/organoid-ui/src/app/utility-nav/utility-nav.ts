@@ -1,23 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { ApiService, PredictionResponse } from '../api/api.service';
+import { ApiService, PredictionResponse, TrainingStatus } from '../api/api.service';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Chart } from 'chart.js/auto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-utility-nav',
-  imports: [RouterModule, RouterOutlet, CommonModule],
+  imports: [RouterModule, RouterOutlet, CommonModule, FormsModule],
   templateUrl: './utility-nav.html',
   styleUrl: './utility-nav.scss'
 })
 export class UtilityNav {
-
 
   selectedFile!: File;
   result!: PredictionResponse;
   loading$ = new BehaviorSubject<boolean>(false);
   //loading = false;
   imagePreview!: string;
+
+  selectedCellType = 'EOSINOPHIL';
+  threshold = 0.8;
+
+  filterResults: any[] = [];
 
   constructor(private api: ApiService, private ngZone: NgZone, private router: Router) {}
 
@@ -33,6 +39,17 @@ export class UtilityNav {
     this.selectedFile = null as any;
     this.imagePreview = '';
     this.result = null as any;
+  }
+
+  filter() {
+    this.filterResults = [];
+    this.loading$.next(true);
+    this.api.filterCells(this.selectedCellType, this.threshold)
+      .subscribe((res: any) => {
+        this.filterResults = res.matched_files;
+        this.loading$.next(false);
+        console.log(res);
+      });
   }
   predict() {
     if (!this.selectedFile) return;
@@ -50,6 +67,8 @@ export class UtilityNav {
         this.loading$.next(false); // ensure spinner disappears even on error
       }
     });
+  
+  
 
       /*if (!this.selectedFile) return;
 
@@ -69,7 +88,6 @@ export class UtilityNav {
           });
         }
       });*/
-  }
-
+ }
 
 }

@@ -367,5 +367,7 @@ async def predict(file: UploadFile = ...):
     predicted_result = predict_image(model, test_temp_path, device, label_names)
     return {"predictions": predicted_result}
 
+
+
 if  __name__ == "__main__":
     main()

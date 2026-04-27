@@ -10,9 +10,8 @@ For testing the model:
     python3 src/backend/backend_blood_cell_classification.py --test test
 For predicting using the model:
     python3 src/backend/backend_blood_cell_classification.py --predict predict
+    This project is for Dopple SA and is developed by Barsha Lamichhane.
 """
-import time
-
 from matplotlib.dates import MO
 import numpy as np
 import pandas as pd
@@ -42,14 +41,6 @@ MODEL_METRICS_NAME = "blood_cell_metrics.csv"
 MODEL_METRICS_PATH = os.path.join(MODEL_METRICS_DIRECTORY, MODEL_METRICS_NAME)
 TEST_FOLDER_NAME = "TEST_SIMPLE"
 TEST_DATA_PATH = os.path.join("data/blood-cells/dataset2-master/dataset2-master/images", TEST_FOLDER_NAME)
-
-training_status = {
-    "epoch": 0,
-    "total_epochs": 0,
-    "loss": 0,
-    "loss_history": [],
-    "status": "idle"
-}
 
 ##DATASET
 # Download dataset from Kaggle
@@ -118,8 +109,6 @@ class CNN(nn.Module):
 # Main function to run the training process
 def train_model(model, train_dataset, test_dataset, num_epochs, batch_size):
     print("Starting training...")
-    global training_status
-    
 
      # Get the list of label names
     label_names = test_dataset.classes
@@ -141,14 +130,6 @@ def train_model(model, train_dataset, test_dataset, num_epochs, batch_size):
 
     losses = []
 
-    training_status.update({
-        "epoch": 0,
-        "total_epochs": num_epochs,
-        "loss_history": [],
-        "status": "running"
-        
-        })
-
     # Training loop
     for epoch in range(num_epochs):  # Number of epochs
         model.train()
@@ -167,16 +148,11 @@ def train_model(model, train_dataset, test_dataset, num_epochs, batch_size):
         #Append loss for each epoch to the losses list
         losses.append(loss.item())
         print("print loss:", loss.item())
-        training_status["epoch"] = epoch + 1
-        training_status["loss"] = loss.item()
-        training_status["loss_history"].append(loss.item())
-
         os.makedirs(MODEL_METRICS_DIRECTORY, exist_ok=True)
         #save_logged_metrics(self,loss.item(), MODEL_METRICS_PATH)
         print(f"Training metrics saved to {MODEL_METRICS_PATH}")
         # Print loss for each epoch
         print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
-        time.sleep(0.5)  # Simulate time taken for training
 
     print("Training complete.")
     os.makedirs(MODEL_DIRECTORY, exist_ok=True)
@@ -287,6 +263,8 @@ def arg_param():
     return args
 
 def main():
+    import time
+    start_time = time.time()
     download()
     # Get the datasets
     train_path = create_train_path()
@@ -296,6 +274,7 @@ def main():
     test_dataset = create_datasets(test_path, data_transforms)
     test_dataloader = create_dataloaders(test_dataset, batch_size=64, to_shuffle=False)
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    num_epochs=5
     label_names = test_dataset.classes
     print("Label names:", label_names)
 
@@ -305,9 +284,11 @@ def main():
             if( not os.path.exists(MODEL_PATH)):
                 print("Training the model...")
                 model = CNN().to(device)
-                train_model(model,train_dataset, test_dataset, num_epochs=25, batch_size=64)
+                train_model(model,train_dataset, test_dataset, num_epochs, batch_size=64)
             else:
                 print("Model already trained and saved at model/blood_cell_classification/blood_cell_model.pth")
+            end_time = time.time()
+            print(f"Execution time: {end_time - start_time:.2f} seconds")  
         elif(args.test):
             if( not os.path.exists(MODEL_PATH)):
                 print("Model not trained yet! Please train the model first using --train argument.")
@@ -343,10 +324,26 @@ def main():
     else:
         print("No arguments provided! Use --train, --test, or --predict.")
         return
+    
+
+from pydantic import BaseModel
+from typing import List
+from fastapi.staticfiles import StaticFiles
+
+
+
+class FilterRequest(BaseModel):
+    cell_type: str
+    threshold: float
 
 from fastapi import FastAPI
 from fastapi import FastAPI, UploadFile, File
+BASE_IMAGES_PATH = "data/blood-cells/dataset2-master/dataset2-master/images"
+
+
 app = FastAPI()
+app.mount("/images", StaticFiles(directory=BASE_IMAGES_PATH), name="images")
+#app.mount("/images", StaticFiles(directory=TEST_DATA_PATH), name="images")
 
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -385,5 +382,47 @@ async def predict(file: UploadFile = ...):
     predicted_result = predict_image(model, test_temp_path, device, label_names)
     return {"predictions": predicted_result}
 
+@app.post("/filter")
+async def filter_cells(request: FilterRequest):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
+    model = CNN()
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+    model = model.to(device)
+
+    label_names = ['EOSINOPHIL', 'LYMPHOCYTE', 'MONOCYTE', 'NEUTROPHIL']
+
+    selected_type = request.cell_type
+    threshold = request.threshold
+
+    results = []
+
+    # 👇 Your LIST A (example: scan TEST folder)
+    for label in label_names:
+        folder_path = os.path.join(TEST_DATA_PATH, label)
+
+        for file in os.listdir(folder_path):
+            img_path = os.path.join(folder_path, file)
+            print(f"Processing {img_path}, {img_path}")
+            pred = predict_image(model, img_path, device, label_names)
+            print("selected type:", selected_type, "threshold:", threshold)
+            if (
+                pred["predicted_class_name"] == selected_type
+                and pred["confidence_scores"] >= threshold
+            ):
+                results.append({
+                    "file": file,
+                    "predicted_class": pred["predicted_class_name"],
+                    "confidence": pred["confidence_scores"],
+                    #"image_url": f"http://localhost:8000/images/TEST_SIMPLE/{label}/{file}"
+                    "image_url": f"http://localhost:8000/images/{TEST_FOLDER_NAME}/{label}/{file}"
+                })
+            
+            
+    return {
+        "selected_type": selected_type,
+        "threshold": threshold,
+        "matched_files": results[:3]   #for showing only 3 results in the frontend, you can remove this slicing to show all results
+    }
 if  __name__ == "__main__":
     main()
