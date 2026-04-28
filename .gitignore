@@ -10,7 +10,7 @@ image_paths.npy
 labels.npy
 model.pth
 model/*
-metrics/*
+##metrics/*
 __pycache__
 src/backend_backup/__pycache__
 

@@ -34,27 +34,15 @@ export class ApiService {
     return this.http.post<PredictionResponse>(`${this.baseUrl}/predict`, formData);
   }
 
-  startTraining(): Observable<any> {
-    return this.http.post(`${this.baseUrl}/train`, {});
-  }
-  /*startTraining(): Observable<TrainingStatus> {
-    return this.http.post<TrainingStatus>(`${this.baseUrl}/train`, {});
-  }*/
-
-  getTrainingStream(): 
-  EventSource {
-    return new EventSource(`${this.baseUrl}/train/stream`);
-  }
-
-  getTrainingStatus(): Observable<TrainingStatus> {
-    return this.http.get<TrainingStatus>(`${this.baseUrl}/train/stream`);
-  }
-
   filterCells(cellType: string, threshold: number) {
     return this.http.post(`${this.baseUrl}/filter`, {
       cell_type: cellType,
       threshold: threshold
     });
+  }
+
+  getMetricsStream(): EventSource {
+    return new EventSource(`${this.baseUrl}/metrics/stream`);
   }
 
 }

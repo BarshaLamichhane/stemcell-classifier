@@ -17,6 +17,9 @@ import numpy as np
 import pandas as pd
 import sys
 import os
+import csv
+import time
+import json
 
 ##LIBRARIES
 
@@ -30,6 +33,7 @@ import kaggle
 
 
 
+
 IMAGE_WIDTH = 64
 IMAGE_HEIGHT = 64
 IMAGE_SIZE = (IMAGE_WIDTH, IMAGE_HEIGHT)
@@ -37,7 +41,7 @@ MODEL_DIRECTORY = "model/blood_cell_classification"
 MODEL_NAME = "blood_cell_model.pth"
 MODEL_PATH = os.path.join(MODEL_DIRECTORY, MODEL_NAME)
 MODEL_METRICS_DIRECTORY = "metrics/blood_cell_classification"
-MODEL_METRICS_NAME = "blood_cell_metrics.csv"
+MODEL_METRICS_NAME = "training_blood_cell_log.csv"
 MODEL_METRICS_PATH = os.path.join(MODEL_METRICS_DIRECTORY, MODEL_METRICS_NAME)
 TEST_FOLDER_NAME = "TEST_SIMPLE"
 TEST_DATA_PATH = os.path.join("data/blood-cells/dataset2-master/dataset2-master/images", TEST_FOLDER_NAME)
@@ -109,6 +113,7 @@ class CNN(nn.Module):
 # Main function to run the training process
 def train_model(model, train_dataset, test_dataset, num_epochs, batch_size):
     print("Starting training...")
+    logger = CSVLogger(MODEL_METRICS_PATH)
 
      # Get the list of label names
     label_names = test_dataset.classes
@@ -148,8 +153,9 @@ def train_model(model, train_dataset, test_dataset, num_epochs, batch_size):
         #Append loss for each epoch to the losses list
         losses.append(loss.item())
         print("print loss:", loss.item())
-        os.makedirs(MODEL_METRICS_DIRECTORY, exist_ok=True)
+        #os.makedirs(MODEL_METRICS_DIRECTORY, exist_ok=True)
         #save_logged_metrics(self,loss.item(), MODEL_METRICS_PATH)
+        logger.log(epoch+1, f"{loss.item():.4f}")
         print(f"Training metrics saved to {MODEL_METRICS_PATH}")
         # Print loss for each epoch
         print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
@@ -159,7 +165,24 @@ def train_model(model, train_dataset, test_dataset, num_epochs, batch_size):
     save_trained_model(model, MODEL_PATH)
     print(f"Trained model saved to {MODEL_PATH}")
 
+
     #return losses
+class CSVLogger:
+    def __init__(self, filepath):
+        self.filepath = filepath
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+        # Create file with header if it doesn't exist
+        if not os.path.exists(filepath):
+            with open(filepath, mode="w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow(["epoch", "train_loss"])
+
+    def log(self, epoch, train_loss):
+        with open(self.filepath, mode="a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([epoch, train_loss])
+
 
 def save_logged_metrics(self, metrics, path):
     print("metrics to save:", metrics)
@@ -274,7 +297,7 @@ def main():
     test_dataset = create_datasets(test_path, data_transforms)
     test_dataloader = create_dataloaders(test_dataset, batch_size=64, to_shuffle=False)
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    num_epochs=5
+    num_epochs=50
     label_names = test_dataset.classes
     print("Label names:", label_names)
 
@@ -339,6 +362,8 @@ class FilterRequest(BaseModel):
 from fastapi import FastAPI
 from fastapi import FastAPI, UploadFile, File
 BASE_IMAGES_PATH = "data/blood-cells/dataset2-master/dataset2-master/images"
+from fastapi.responses import StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
@@ -346,7 +371,7 @@ app.mount("/images", StaticFiles(directory=BASE_IMAGES_PATH), name="images")
 #app.mount("/images", StaticFiles(directory=TEST_DATA_PATH), name="images")
 
 
-from fastapi.middleware.cors import CORSMiddleware
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:4200"],
@@ -424,5 +449,40 @@ async def filter_cells(request: FilterRequest):
         "threshold": threshold,
         "matched_files": results[:3]   #for showing only 3 results in the frontend, you can remove this slicing to show all results
     }
+
+from fastapi.responses import StreamingResponse
+import csv
+import time
+
+@app.get("/metrics/stream")
+def stream_metrics():
+
+    def event_stream():
+        with open(MODEL_METRICS_PATH, "r") as f:
+            reader = csv.DictReader(f)
+
+            loss_history = []
+
+            for row in reader:
+                epoch = int(row["epoch"])
+                loss = float(row["train_loss"])
+
+                loss_history.append(loss)
+
+                data = {
+                    "epoch": epoch,
+                    "total_epochs": 50,  # or len(csv)
+                    "loss": loss,
+                    "loss_history": loss_history,
+                    "status": "replaying"
+                }
+
+                yield f"data: {json.dumps(data)}\n\n"
+                time.sleep(1)  # simulate real-time playback
+
+        # send completed event
+        yield f"data: {json.dumps({'status': 'completed'})}\n\n"
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
 if  __name__ == "__main__":
     main()

@@ -1,0 +1,102 @@
+<!-- ================= TRAIN BUTTON ================= -->
+<button class="btn btn-outline-primary mb-3" (click)="replayTraining()">
+  ▶ Replay Training
+</button>
+
+<!-- ================= TRAINING VIEW ================= -->
+<div *ngIf="isTraining" class="card p-4 shadow-sm border-0" style="background:#f8fbff;">
+
+  <div class="row">
+
+    <!-- LEFT: TERMINAL LOGS -->
+    <div class="col-md-4 border-end">
+
+      <h5 class="fw-bold text-primary mb-3">
+        Training Logs
+      </h5>
+
+      <div #terminalBox class="terminal-box p-3">
+
+        <div *ngFor="let log of logs">
+          {{ log }}
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT: CHART -->
+    <div class="col-md-8">
+
+      <h5 class="fw-bold text-primary mb-3">
+        Training Curve
+      </h5>
+
+      <canvas id="lossChart"></canvas>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================= CLASSIFY VIEW ================= -->
+<div *ngIf="trainingCompleted" class="card mt-4 p-4 shadow-sm border-0" style="background:#f8fbff;">
+
+  <h5 class="mb-3 fw-bold text-primary">
+    Classify Blood Cells
+  </h5>
+
+  <div class="row g-2 align-items-end">
+
+    <!-- CELL TYPE -->
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Cell Type</label>
+      <select [(ngModel)]="selectedCellType" class="form-select">
+        <option value="EOSINOPHIL">EOSINOPHIL</option>
+        <option value="LYMPHOCYTE">LYMPHOCYTE</option>
+        <option value="MONOCYTE">MONOCYTE</option>
+        <option value="NEUTROPHIL">NEUTROPHIL</option>
+      </select>
+    </div>
+
+    <!-- THRESHOLD -->
+    <div class="col-md-5">
+      <label class="form-label fw-semibold">
+        Threshold:
+        <span class="text-primary">
+          {{ threshold * 100 | number:'1.0-0' }}%
+        </span>
+      </label>
+
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        [(ngModel)]="threshold"
+        class="form-range"
+      />
+
+      <div class="d-flex justify-content-between small text-muted">
+        <span>0%</span>
+        <span>50%</span>
+        <span>100%</span>
+      </div>
+    </div>
+
+    <!-- BUTTON -->
+    <div class="col-md-3">
+      <button
+        class="btn btn-primary w-100 py-2 fw-semibold shadow-sm"
+        style="background: linear-gradient(135deg,#3b82f6,#2563eb); border:none;"
+        (click)="filter()"
+      >
+        Classify
+      </button>
+    </div>
+
+  </div>
+
+</div>
