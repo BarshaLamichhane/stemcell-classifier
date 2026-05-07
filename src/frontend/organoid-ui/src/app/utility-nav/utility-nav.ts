@@ -29,7 +29,7 @@ export class UtilityNav {
   trainingCompleted = false;
 
   epoch = 0;
-  total = 50;
+  total = 18;
   loss = 0;
 
 
@@ -95,15 +95,15 @@ export class UtilityNav {
     if (data.status === 'completed') {
 
       this.ngZone.run(() => {
-        this.logs = [...this.logs, '> Training completed ✅'];
+        this.logs = [...this.logs, '> Training completed '];
         //this.isTraining = false;
         this.trainingCompleted = true;
-        this.cdr.detectChanges(); // 🔥 FORCE UI UPDATE
+        this.cdr.detectChanges(); //  FORCE UI to UPDATE
       });
 
       this.metricsEventSource.close();
       return;
-    }
+    } 
 
     this.ngZone.run(() => {
 
@@ -111,11 +111,12 @@ export class UtilityNav {
       this.total = data.total_epochs;
       this.loss = data.loss;
 
-      // 🔥 IMPORTANT: IMMUTABLE UPDATE (THIS FIXES UI ISSUE)
+      // This is important: immutable update for fixing UI rendering issues
       this.logs = [
         ...this.logs,
         `> Epoch ${this.epoch}/${this.total} - Loss: ${this.loss.toFixed(4)}`
       ];
+      console.log(`Epoch ${this.epoch}/${this.total} - Loss: ${this.loss.toFixed(4)}`);
 
       this.lossHistory.push(this.loss);
 
@@ -125,7 +126,7 @@ export class UtilityNav {
         this.chart.update();
       }
 
-      // 🔥 FORCE Angular to render DOM immediately
+      // force angular to render DOM immediately
       this.cdr.detectChanges();
     });
   };

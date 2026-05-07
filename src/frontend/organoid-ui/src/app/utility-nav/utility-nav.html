@@ -1,3 +1,16 @@
+
+<div class="text-center my-4">
+  <h2 class="fw-bold" style="
+      background: linear-gradient(135deg,#3b82f6,#2563eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    ">
+    Blood Cell Classification System
+  </h2>
+  <p class="text-muted small">
+    Real-time training monitoring & AI-powered classification
+  </p>
+</div>
 <!-- ================= TRAIN BUTTON ================= -->
 <button class="btn btn-outline-primary mb-3" (click)="replayTraining()">
   ▶ Simulate Training
@@ -116,9 +129,9 @@
           <!-- CONFIDENCE BADGE -->
           <span class="badge rounded-pill px-3 py-2"
                 [ngClass]="{
-                  'bg-info': item.confidence >= 0.3,
-                  'bg-warning text-dark': item.confidence >= 0.1 && item.confidence < 0.2,
-                  'bg-secondary': item.confidence < 0.1
+                  'bg-info': item.confidence >= 0.5,
+                  'bg-warning text-dark': item.confidence >= 0.5 && item.confidence <= 0.7,
+                  'bg-secondary': item.confidence < 0.5
                 }">
             Confidence score : {{ item.confidence * 100 | number:'1.0-1' }}%
           </span>
@@ -129,9 +142,9 @@
               class="progress-bar"
               [style.width.%]="item.confidence * 100"
               [ngClass]="{
-                'bg-info': item.confidence >= 0.3,
-                'bg-warning text-dark': item.confidence >= 0.1 && item.confidence < 0.2,
-                'bg-secondary': item.confidence < 0.1
+                'bg-info': item.confidence >= 0.5,
+                'bg-warning text-dark': item.confidence >= 0.5 && item.confidence <= 0.7,
+                'bg-secondary': item.confidence < 0.5
               }">
             </div>
           </div>

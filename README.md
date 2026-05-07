@@ -91,11 +91,18 @@ This will predict blood cell image.
 
 ### Run the FastAPI backend for prediction before using frontend/UI
 ```bash
+uvicorn src/backend.backend_blood_cell_classification__Corontis:app --reload
+```
+or 
+```bash
+python3 src/backend/backend_blood_cell_classification_Corontis.py --serve serve 
+```
+```bash
 uvicorn src/backend.backend_blood_cell_classification:app --reload
 ```
 or 
 ```bash
-python3 src/backend/backend_blood_cell_classification.py --serve serve 
+python3 src/backend/backend_blood_cell_classification_Corontis.py --serve serve 
 ```
 You can open for testing
 
