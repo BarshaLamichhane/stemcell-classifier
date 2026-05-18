@@ -1,0 +1,165 @@
+<!--https://getbootstrap.com/docs/5.0/components/button-group/ -->
+<div class="container py-5">
+  
+    <div class="text-center my-4">
+    <h2 class="fw-bold" style="
+        background: linear-gradient(135deg,#3b82f6,#2563eb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        ">
+        Blood Cell Classification System
+    </h2>
+    <p class="text-muted small">
+        Real-time training monitoring & AI-powered classification
+    </p>
+    </div>
+    <!-- ================= TRAIN BUTTON ================= -->
+    <button class="btn btn-outline-primary mb-3" (click)="replayTraining()">
+    ▶ Simulate Training
+    </button>
+
+    <!-- ================= TRAINING VIEW ================= -->
+    <div  *ngIf="this.isTraining" class="card p-4 shadow-sm border-0" style="background:#f8fbff;">
+
+    <div class="row">
+
+        <!-- LEFT: TERMINAL LOGS -->
+        <div class="col-md-4 border-end">
+
+        <h5 class="fw-bold text-primary mb-3">
+            Training Logs
+        </h5>
+
+        <!-- WHITE TERMINAL (as requested) -->
+        <div class="terminal-box-white">
+
+            <div *ngFor="let log of logs">
+            {{ log }}
+            </div>
+
+        </div>
+
+        </div>
+
+        <!-- RIGHT: CHART -->
+        <div class="col-md-8">
+
+        <h5 class="fw-bold text-primary mb-3">
+            Training Curve
+        </h5>
+
+        <div class="chart-wrapper">
+            <canvas id="lossChart"></canvas>
+        </div>
+        </div>
+
+    </div>
+
+    </div>
+
+
+    <!-- ================= CLASSIFY VIEW ================= -->
+    <div *ngIf="trainingCompleted" class="card mt-4 p-4 shadow-sm border-0" style="background:#f8fbff;">
+
+    <h5 class="mb-3 fw-bold text-primary">
+        Classify Blood Cells
+    </h5>
+
+    <div class="row g-2 align-items-end">
+
+        <div class="col-md-4">
+        <label class="form-label fw-semibold">Cell Type</label>
+        <select [(ngModel)]="selectedCellType" class="form-select">
+            <option value="EOSINOPHIL">EOSINOPHIL</option>
+            <option value="LYMPHOCYTE">LYMPHOCYTE</option>
+            <option value="MONOCYTE">MONOCYTE</option>
+            <option value="NEUTROPHIL">NEUTROPHIL</option>
+        </select>
+        </div>
+
+        <div class="col-md-5">
+        <label class="form-label fw-semibold">
+            Threshold: {{ threshold * 100 | number:'1.0-0' }}%
+        </label>
+
+        <input type="range" min="0" max="1" step="0.01"
+            [(ngModel)]="threshold"
+            class="form-range"
+        />
+        </div>
+
+        <div class="col-md-3">
+        <button class="btn btn-primary w-100" (click)="filter()">
+            Classify
+        </button>
+        </div>
+
+    </div>
+
+    <div *ngIf="filterResults.length === 0 && !(loading$ | async)">
+    <p class="text-muted">No results yet. Run filter.</p>
+    </div>
+
+
+    <div *ngIf="filterResults.length > 0" class="mt-4">
+
+    <h5 class="fw-bold text-secondary mb-3">
+        Matches
+    </h5>
+
+    <div class="row g-3">
+
+        <div class="col-md-4" *ngFor="let item of filterResults">
+
+        <div class="card border-0 shadow-sm h-100 result-card">
+
+            <!-- IMAGE -->
+            <div class="image-container">
+            <img
+                [src]="item.image_url"
+                class="card-img-top result-img"
+            />
+            </div>
+
+            <!-- BODY -->
+            <div class="card-body text-center">
+
+            <h6 class="fw-bold text-primary mb-1">
+                {{ item.predicted_class }}
+            </h6>
+
+            <!-- CONFIDENCE BADGE -->
+            <span class="badge rounded-pill px-3 py-2"
+                    [ngClass]="{
+                    'bg-info': item.confidence >= 0.5,
+                    'bg-warning text-dark': item.confidence >= 0.5 && item.confidence <= 0.7,
+                    'bg-secondary': item.confidence < 0.5
+                    }">
+                Confidence score : {{ item.confidence * 100 | number:'1.0-1' }}%
+            </span>
+
+            <!-- PROGRESS BAR -->
+            <div class="progress mt-3" style="height: 6px;">
+                <div
+                class="progress-bar"
+                [style.width.%]="item.confidence * 100"
+                [ngClass]="{
+                    'bg-info': item.confidence >= 0.5,
+                    'bg-warning text-dark': item.confidence >= 0.5 && item.confidence <= 0.7,
+                    'bg-secondary': item.confidence < 0.5
+                }">
+                </div>
+            </div>
+
+            </div>
+
+        </div>
+
+        </div>
+
+    </div>
+    </div>
+
+    </div>
+</div>
+

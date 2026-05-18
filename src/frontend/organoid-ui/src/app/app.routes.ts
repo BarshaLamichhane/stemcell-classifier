@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
-import { ImageUploadComponent } from './image-upload/image-upload';
+import { InferenceUiDoppl } from './inference-ui-doppl/inference-ui-doppl';
+import { InferenceUiCorintis } from './inference-ui-corintis/inference-ui-corintis';
+
 export const routes: Routes = [
-    { path: 'predict', component: ImageUploadComponent },
-    { path: '', redirectTo: 'predict', pathMatch: 'full' },
-    { path: '**', redirectTo: 'predict' }
+    { path: 'predict/dopplsa', component: InferenceUiDoppl},
+    { path: 'predict/corontissa', component: InferenceUiCorintis},
+    { path: '', redirectTo: 'predict/corontissa', pathMatch: 'full' },
+    { path: '**', redirectTo: 'predict/corontissa' }
     
 ];

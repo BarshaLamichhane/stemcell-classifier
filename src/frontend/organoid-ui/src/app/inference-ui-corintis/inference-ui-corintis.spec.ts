@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ImageUploadComponent } from './image-upload';
+import { InferenceUiCorintis } from './inference-ui-corintis';
 
-describe('ImageUpload', () => {
-  let component: ImageUploadComponent;
-  let fixture: ComponentFixture<ImageUploadComponent>;
+describe('InferenceUiCorintis', () => {
+  let component: InferenceUiCorintis;
+  let fixture: ComponentFixture<InferenceUiCorintis>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ImageUploadComponent]
+      imports: [InferenceUiCorintis]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ImageUploadComponent);
+    fixture = TestBed.createComponent(InferenceUiCorintis);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

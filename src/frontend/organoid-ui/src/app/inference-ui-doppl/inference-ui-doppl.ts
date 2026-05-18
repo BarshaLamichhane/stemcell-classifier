@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, NgZone } from '@angular/core';
+
+import { Component, NgZone } from '@angular/core';
 import { ApiService, PredictionResponse } from '../api/api.service';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -6,12 +7,13 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 
 @Component({
-  selector: 'image-upload',
-  templateUrl: './image-upload.html',
-  styleUrls: ['./image-upload.scss'],
+  selector: 'app-inference-ui-doppl',
   imports: [RouterModule, RouterOutlet, CommonModule],
+  templateUrl: './inference-ui-doppl.html',
+  styleUrl: './inference-ui-doppl.scss'
+  
 })
-export class ImageUploadComponent{
+export class InferenceUiDoppl{
   selectedFile!: File;
   result!: PredictionResponse;
   loading$ = new BehaviorSubject<boolean>(false);

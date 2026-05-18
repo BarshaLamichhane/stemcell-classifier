@@ -89,13 +89,23 @@ python src/backend/backend_blood_cell_classification.py --predict predict
 This will predict blood cell image. 
 
 
-### Run the FastAPI backend for prediction before using frontend/UI
+### Run the FastAPI backend for prediction before using frontend/UI for corintis UI
+```bash
+uvicorn src/backend.backend_blood_cell_classification__Corontis:app --reload
+```
+or 
+```bash
+python3 src/backend/backend_blood_cell_classification_Corontis.py --serve serve 
+ 
+```
+### Run the FastAPI backend for prediction before using frontend/UI for DopplSA UI
 ```bash
 uvicorn src/backend.backend_blood_cell_classification:app --reload
 ```
 or 
 ```bash
 python3 src/backend/backend_blood_cell_classification.py --serve serve 
+
 ```
 You can open for testing
 

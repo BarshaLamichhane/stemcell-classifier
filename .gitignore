@@ -10,7 +10,11 @@ image_paths.npy
 labels.npy
 model.pth
 model/*
+<<<<<<< HEAD
 metrics/*
+=======
+##metrics/*
+>>>>>>> demo-for-corintis
 __pycache__
 src/backend_backup/__pycache__
 
